@@ -10,7 +10,6 @@
             "resizeMode": "contain",
             "backgroundColor": "#ffffff"
         },
-        "scheme": "chatting",
         "updates": {
             "fallbackToCacheTimeout": 0
         },
@@ -28,7 +27,7 @@
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#FFFFFF"
             },
-            "package":"com.praman.chatting"
+            "package":"com.app.chatting"
         },
         "web": {
             "favicon": "./assets/favicon.png"
