@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { initializeApp } from 'firebase/app';
 import { getAuth, FacebookAuthProvider, signInWithCredential, GoogleAuthProvider, fetchSignInMethodsForEmail } from 'firebase/auth';
-import { getDatabase, ref, set } from "firebase/database";
+import { get, getDatabase, ref, set, child } from "firebase/database";
 import * as Facebook from 'expo-facebook';
 import ChatsList from './ChatsList';
 import Chat from './Chat';
@@ -41,6 +41,8 @@ export default class App extends React.Component {
         };
         const app = initializeApp(firebaseConfig);
         this.fetchState();
+
+
     }
 
     async fetchState() {
@@ -96,9 +98,9 @@ export default class App extends React.Component {
         signInWithCredential(auth, credential)
             .then(result => {
                 const db = getDatabase();
-                fetchSignInMethodsForEmail(auth, result.user.email)
-                    .then(signInMethods => {
-                        if (signInMethods.length == 0) {
+                get(child(ref(db), 'users/' + result.user.uid))
+                    .then((snapshot) => {
+                        if (snapshot.val() == null) {
                             set(ref(db, 'users/' + result.user.uid), {
                                 username: result.user.displayName,
                                 id: result.user.uid,
@@ -112,9 +114,8 @@ export default class App extends React.Component {
                                     isReady: true
                                 })
                             })
-                    });
-
-
+                    })
+                    .catch(e => console.log(e));
             })
             .catch(error => {
                 // Handle Errors here.
